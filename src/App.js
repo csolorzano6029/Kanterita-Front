@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react';
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader} from 'react-bulma-components';
-import React from 'react';
+import Modal from 'react-modal';
+import React, { useState } from 'react';
+
 function App() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
   const [registerDetails, setRegisterDetails] = useState([]);
   const [inputSearch, setInputSearch] = useState('');
   const [order, setOrder] = useState({});
-  const [isOpen, setIsOpen] = useState(false);
+  const [modalisOpen, setModalIsOpen] = useState(false);
   const getOrder = (event) => {
+
     event.preventDefault();
     if (inputSearch == "") {
       return;
     }
     console.log(inputSearch);
+
     fetch(`http://localhost:8080/orders/${inputSearch}/details`)
       .then(response => response.json())
       .then(result => {
-        console.log(result);
         setRegisterDetails(result);
       })
+
     fetch(`http://localhost:8080/orders/${inputSearch}`)
       .then(response => response.json())
       .then(result => {
-        console.log(result);
         setOrder(result);
       })
   }
+
   return (
     <div className="container my-3">
 
@@ -43,10 +43,10 @@ function App() {
         </div>
         <div className="col-md-2 justify-content-end">
           <div className="row">
-            <Button variant="primary" onClick={handleShow}>
-              Launch demo modal
-            </Button>
-           
+            <button variant="primary" onClick={() => setModalIsOpen(true)}>
+              Nuevo detalle
+            </button>
+
             {/* <Modal isOpen={isOpen} setIsOpen={setIsOpen} /> */}
 
           </div>
@@ -91,7 +91,41 @@ function App() {
         </table>
       </div>
 
-
+      <Modal isOpen={modalisOpen}>
+        <h2>REGISTRO DE DETALLE</h2>
+        <p>Body del modal</p>
+        <div>
+          <form>
+            <div class="mb-3">
+              <label for="cliente" class="form-label">Clientes</label>
+              <select class="form-select" aria-label="Clientes">
+                <option selected>Seleccioanr clientes</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="detalle" class="form-label">Detalle de la orden</label>
+              <input type="text" class="form-control" id="detalle" aria-describedby="emailHelp" />
+            </div>
+            <div class="mb-3 ">
+              <label class="form-label" for="cantidad">Cantidad</label>
+              <input type="text" class="form-control" id="cantidad" />
+            </div>
+            <div class="mb-3">
+              <label for="precio" class="form-label">Precio</label>
+              <input type="text" class="form-control" id="precio" />
+            </div>
+            <div class="mb-3">
+              <label for="total" class="form-label">Total</label>
+              <input type="text" class="form-control" id="total" />
+            </div>
+            
+            <button onClick={() => setModalIsOpen(false)} class="btn btn-primary">Cerrar</button>
+          </form>
+        </div>
+      </Modal>
     </div>
 
   );
